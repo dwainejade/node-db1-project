@@ -41,8 +41,32 @@ router.post("/", async (req, res, next) => {
 })
 
 // update account
+router.put("/:id", async (req, res, next) => {
+    try {
+        const payload = {
+            name: req.body.name,
+            budget: req.body.budget
+        }
+        await db("accounts").where("id", req.params.id).update(payload)
 
+        const account = await db("accounts").where("id", req.params.id).first()
+        res.json(account)
+
+    } catch (err) {
+        next()
+    }
+})
 
 // delete account
+router.delete("/:id", async (req, res, next) => {
+    try {
+        await db("accounts").where("id", req.params.id).del()
+        res.json({
+            message: `We erased account ${req.params.id} from the books`
+        })
+    } catch (err) {
+        next(err)
+    }
+})
 
 module.exports = router
