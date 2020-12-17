@@ -27,13 +27,21 @@ router.get("/:id", async (req, res, next) => {
 // post new account
 router.post("/", async (req, res, next) => {
     try {
-        const account = await db("accounts")
+        const payload = {
+            name: req.body.name,
+            budget: req.body.budget
+        }
+
+        const [newAccount] = await db.insert(payload).into("accounts")
+        const account = await db("accounts").where("id", newAccount).first()
+        res.json(account)
     } catch (err) {
         next(err)
     }
 })
 
 // update account
+
 
 // delete account
 
